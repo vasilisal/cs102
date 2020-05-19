@@ -1,0 +1,8 @@
+Писала код в repl 
+Итоговая проверка 
+
+life = GameOfLife((20, 40), max_generations=10000)
+gui = GUI(life)
+gui.run()
+
+Все работало, пауза и тд.
