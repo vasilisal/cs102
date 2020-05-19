@@ -1,103 +1,167 @@
-#!/usr/bin/env python
-# coding: utf-8
+def read_sudoku(filename: str) -> List[List[str]]:
+    """ Прочитать Судоку из указанного файла """
+    with open(filename) as f:
+        content = f.read()
+    digits = [c for c in content if c in '123456789.']
+    grid = group(digits, 9)
+    return grid
 
-# In[2]:
+def display(grid: List[List[str]]) -> None:
+    """Вывод Судоку """
+    width = 2
+    line = '+'.join(['-' * (width * 3)] * 3)
+    for row in range(9):
+        print(''.join(grid[row][col].center(width) + ('|' if str(col) in '25' else '') for col in range(9)))
+        if str(row) in '25':
+            print(line)
+    print()
 
+def group(values: List[str], n: int) -> List[List[str]]:
+    """
+    Сгруппировать значения values в список, состоящий из списков по n элементов
 
-import random
+    >>> group([1,2,3,4], 2)
+    [[1, 2], [3, 4]]
+    >>> group([1,2,3,4,5,6,7,8,9], 3)
+    [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    """
+    return [row[i:i+n] for i in range(0,len(row), n)]
 
-import pygame
-from pygame.locals import *
+def get_row(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
+    """ Возвращает все значения для номера строки, указанной в pos
 
-class GameOfLife:
-
-    def __init__(self, width=640, height=480, cell_size=10, speed=10):
-        self.width = width
-        self.height = height
-        self.cell_size = cell_size
-
-        # Устанавливаем размер окна
-        self.screen_size = width, height
-        # Создание нового окна
-        self.screen = pygame.display.set_mode(self.screen_size)
-
-        # Вычисляем количество ячеек по вертикали и горизонтали
-        self.cell_width = self.width // self.cell_size
-        self.cell_height = self.height // self.cell_size
-        
-        # стартовое поле
-        self.grid = self.create_grid(randomize=True)
-        # Скорость протекания игры
-        self.speed = speed
-
-    def draw_lines(self):
-        for x in range(0, self.width, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('black'), 
-                (x, 0), (x, self.height))
-        for y in range(0, self.height, self.cell_size):
-            pygame.draw.line(self.screen, pygame.Color('black'), 
-                (0, y), (self.width, y))
-
-    def create_grid(self, randomize=False):
-      grid = [[0]*self.cell_width for i in range(self.cell_height)]
-      if randomize:
-        for i in range(self.cell_height):
-          for j in range(self.cell_width):
-            grid[i][j] = random.randint(0,1)
-      return grid
-
-    def draw_grid(self):
-      for i in range(self.cell_height):
-          for j in range(self.cell_width):
-              size = self.cell_size
-              rect = (j*size, i*size, size, size)
-              if self.grid[i][j] == 1:
-                  pygame.draw.rect(self.screen, pygame.Color('green'), rect)
-              else:
-                  pygame.draw.rect(self.screen, pygame.Color('white'), rect)
+    >>> get_row([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']], (0, 0))
+    ['1', '2', '.']
+    >>> get_row([['1', '2', '3'], ['4', '.', '6'], ['7', '8', '9']], (1, 0))
+    ['4', '.', '6']
+    >>> get_row([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (2, 0))
+    ['.', '8', '9']
+    """
+    return grid[pos[0]]
     
-    def get_neighbours(self, cell):
-      i, j = cell
-      right_wrap = (j + 1)%self.cell_width
-      bot_wrap = (i + 1)%self.cell_height
-      return [(i-1, j-1), (i-1, j), (i-1, right_wrap),
-          (i, j-1), (i, right_wrap),
-          (bot_wrap, j-1), (bot_wrap, j), (bot_wrap, right_wrap)]
+    
+def get_col(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
+    """ Возвращает все значения для номера столбца, указанного в pos
 
-    def get_next_generation(self):
-        cells_to_update = []
-        for i in range(self.cell_height):
-            for j in range(self.cell_width):
-                neighbours = self.get_neighbours((i,j))
-                s = sum(self.grid[n[0]][n[1]] for n in neighbours)
-                if self.grid[i][j] == 0 and s == 3:
-                  cells_to_update.append((i, j, 1))
-                elif self.grid[i][j] == 1 and (s < 2 or s > 3):
-                  cells_to_update.append((i, j, 0))
-        for c in cells_to_update:
-            self.grid[c[0]][c[1]] = c[2]
-        return self.grid        
-
-    def run(self):
-        pygame.init()
-        clock = pygame.time.Clock()
-        pygame.display.set_caption('Game of Life')
-        self.screen.fill(pygame.Color('white'))
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    running = False
-            self.get_next_generation()
-            self.draw_grid()          
-            self.draw_lines()
-            pygame.display.flip()
-            clock.tick(self.speed)
-        pygame.quit()
+    >>> get_col([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']], (0, 0))
+    ['1', '4', '7']
+    >>> get_col([['1', '2', '3'], ['4', '.', '6'], ['7', '8', '9']], (0, 1))
+    ['2', '.', '8']
+    >>> get_col([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']], (0, 2))
+    ['3', '6', '9']
+    """
+    return [grid[i][pos[1]] for i in range(len(grid))]
+    
+def get_block(grid: List[List[str]], pos: Tuple[int, int]) -> List[str]:
+    """ Возвращает все значения из квадрата, в который попадает позиция pos
+    >>> grid = read_sudoku('puzzle1.txt')
+    >>> get_block(grid, (0, 1))
+    ['5', '3', '.', '6', '.', '.', '.', '9', '8']
+    >>> get_block(grid, (4, 7))
+    ['.', '.', '3', '.', '.', '1', '.', '.', '6']
+    >>> get_block(grid, (8, 8))
+    ['2', '8', '.', '.', '.', '5', '.', '7', '9']
+    """
+    lc = (pos[0]//3 *3, pos[1]//3*3) #левый верхний угол
+    
+    return [grid[i][j] for i in range(lc[0],lc[0]+3)
+            for j in range(lc[1],lc[1]+3)]
 
 
-# In[ ]:
+def find_empty_positions(grid: List[List[str]]) -> Optional[Tuple[int, int]]:
+    """ Найти первую свободную позицию в пазле
 
+    >>> find_empty_positions([['1', '2', '.'], ['4', '5', '6'], ['7', '8', '9']])
+    (0, 2)
+    >>> find_empty_positions([['1', '2', '3'], ['4', '.', '6'], ['7', '8', '9']])
+    (1, 1)
+    >>> find_empty_positions([['1', '2', '3'], ['4', '5', '6'], ['.', '8', '9']])
+    (2, 0)
+    """
+    L = len(grid)
+    for i in range(L):
+        for j in range(L):
+            if grid[i][j] == '.':
+                return (i, j)
+    return (-1, -1)
+   
 
+def find_possible_values(grid: List[List[str]], pos: Tuple[int, int]) -> Set[str]:
+    """ Вернуть множество всех возможных значения для указанной позиции
+    >>> grid = read_sudoku('puzzles/puzzle1.txt')
+    >>> values = find_possible_values(grid, (0,2))
+    >>> set(values) == {'1', '2', '4'}
+    True
+    >>> values = find_possible_values(grid, (4,7))
+    >>> set(values) == {'2', '5', '9'}
+    True
+    """
+    s = set(map(str, range(1,10)))
+    return (s - set(get_col(grid,pos) + get_row(grid, pos) + get_block(grid,pos)))
+   
+def solve(grid: List[List[str]]) -> Optional[List[List[str]]]:
+    """ Решение пазла, заданного в grid
+    Как решать Судоку?
+    1. Найти свободную позицию
+    2. Найти все возможные значения, которые могут находиться на этой позиции
+    3. Для каждого возможного значения:
+        3.1. Поместить это значение на эту позицию
+        3.2. Продолжить решать оставшуюся часть пазла
+    >>> grid = read_sudoku('puzzle1.txt')
+    >>> solve(grid)
+    [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
+    """
+    i, j = find_empty_positions(grid)
+    if i == -1:
+        return grid
+    pv = find_possible_values(grid, (i, j)) #possible values
+    for v in pv:
+        grid[i][j] = v
+        solution = solve(grid)
+        if solution is not None:
+            return solution
+        grid[i][j] = '.'
 
-
+def check_solution(solution: List[List[str]]) -> bool:
+    """ Если решение solution верно, то вернуть True, в противном случае False """
+    return all(not find_possible_values(solution, (i, j))
+               for i in range(9) for j in range(9))
+ 
+import random
+from typing import Tuple, List, Set, Optional
+ 
+def generate_sudoku(N: int) -> List[List[str]]:
+    """ Генерация судоку заполненного на N элементов
+    >>> grid = generate_sudoku(40)
+    >>> sum(1 for row in grid for e in row if e == '.')
+    41
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    >>> grid = generate_sudoku(1000)
+    >>> sum(1 for row in grid for e in row if e == '.')
+    0
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    >>> grid = generate_sudoku(0)
+    >>> sum(1 for row in grid for e in row if e == '.')
+    81
+    >>> solution = solve(grid)
+    >>> check_solution(solution)
+    True
+    """
+def generate_sudoku(N):
+    s = set(map(str, range(1,10)))
+    field = [['.']*9] for i in range(9)]
+    if N <= 0:
+return field #возвращаем пустое поле
+ field[0] = random.sample(s, 9)
+    solve(field)
+    if N>81:
+return field
+ else:
+    spaces = random.sample(range(81), 81 - N)
+    for sp in spaces:
+        field[sp // 9][sp % 9] = '.'
+return field
