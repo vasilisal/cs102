@@ -1,7 +1,6 @@
 import pygame
 from pygame.locals import *
 
-
 class GUI(UI):
 
     def __init__(self, life, cell_size=10, speed=10):
