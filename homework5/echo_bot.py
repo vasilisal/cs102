@@ -1,6 +1,6 @@
 import telebot
 
-access_token = '1184780361:AAHFnxVUIX3hkZ2o52dGfCJozenvYM2tdyQ'
+access_token = '1184...'
 telegram.apihelper.proxy = {'https': 'https://23.237.22.172:3128'}
 
 # Создание бота с указанным токеном доступа
