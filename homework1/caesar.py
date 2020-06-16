@@ -1,11 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
-def encrypt_caesar(plaintext: str) -> str:
+def encrypt_caesar(plaintext):
     """
+    Encrypts plaintext using a Caesar cipher.
+
     >>> encrypt_caesar("PYTHON")
     'SBWKRQ'
     >>> encrypt_caesar("python")
@@ -15,7 +11,7 @@ def encrypt_caesar(plaintext: str) -> str:
     >>> encrypt_caesar("")
     ''
     """
-    ciphertext = ""
+    
     for char in plaintext:
         if "a" <= char <= "z":
             code = ord(char) + 3
@@ -28,11 +24,14 @@ def encrypt_caesar(plaintext: str) -> str:
         else:
             code = ord(char)
         ciphertext += chr(code)
+   
     return ciphertext
 
 
-def decrypt_caesar(ciphertext: str) -> str:
+def decrypt_caesar(ciphertext):
     """
+    Decrypts a ciphertext using a Caesar cipher.
+
     >>> decrypt_caesar("SBWKRQ")
     'PYTHON'
     >>> decrypt_caesar("sbwkrq")
@@ -42,7 +41,6 @@ def decrypt_caesar(ciphertext: str) -> str:
     >>> decrypt_caesar("")
     ''
     """
-    plaintext = ""
     for char in ciphertext:
         if "a" <= char <= "z":
             code = ord(char) - 3
@@ -55,5 +53,5 @@ def decrypt_caesar(ciphertext: str) -> str:
         else:
             code = ord(char)
         plaintext += chr(code)
+    
     return plaintext
-
