@@ -4,7 +4,7 @@ import datetime
 import re #регулярные выражения
 from bs4 import BeautifulSoup
 
-access_token = '1184780361:AAHFnxVUIX3hkZ2o52dGfCJozenvYM2tdyQ'
+access_token = ''
 domain = 'http://www.ifmo.ru/ru/schedule/'
 
 bot = telebot.TeleBot(access_token)
