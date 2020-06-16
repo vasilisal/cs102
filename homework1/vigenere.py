@@ -22,7 +22,6 @@ def encrypt_vigenere(plaintext, keyword):
                 code = code - 26
         ciphertext += chr(code)
     return ciphertext
-    
 
 
 def decrypt_vigenere(ciphertext, keyword):
