@@ -55,7 +55,7 @@ def get_schedule(web_page: str, day: str):
 
 
 def get_study_day(web_page: str, day: str, week: str, group: str):
-    if days.index(day) >= 6:
+    if days.index(day) >= 6: #метод ищет элемент в списке и возвращает его индекс. 
         day = 'monday'
         if week == 2:
             week = 1
