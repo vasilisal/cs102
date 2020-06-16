@@ -1,11 +1,17 @@
+import pygame
 import random
 
-import pygame
 from pygame.locals import *
+from typing import List, Tuple
+
+
+Cell = Tuple[int, int]
+Cells = List[int]
+Grid = List[Cells
+
 
 class GameOfLife:
-
-    def __init__(self, width=640, height=480, cell_size=10, speed=10):
+    def __init__(self, width=640, height=480, cell_size=10, speed=10) -> None:
         self.width = width
         self.height = height
         self.cell_size = cell_size
@@ -24,7 +30,7 @@ class GameOfLife:
         # Скорость протекания игры
         self.speed = speed
 
-    def draw_lines(self):
+    def draw_lines(self) -> None:
         for x in range(0, self.width, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color('black'), 
                 (x, 0), (x, self.height))
@@ -32,7 +38,7 @@ class GameOfLife:
             pygame.draw.line(self.screen, pygame.Color('black'), 
                 (0, y), (self.width, y))
 
-    def create_grid(self, randomize=False):
+    def create_grid(self, randomize: bool = False) -> Grid:
       grid = [[0]*self.cell_width for i in range(self.cell_height)]
       if randomize:
         for i in range(self.cell_height):
@@ -40,7 +46,7 @@ class GameOfLife:
             grid[i][j] = random.randint(0,1)
       return grid
 
-    def draw_grid(self):
+    def draw_grid(self) -> None:
       for i in range(self.cell_height):
           for j in range(self.cell_width):
               size = self.cell_size
@@ -50,7 +56,7 @@ class GameOfLife:
               else:
                   pygame.draw.rect(self.screen, pygame.Color('white'), rect)
     
-    def get_neighbours(self, cell):
+    def get_neighbours(self, cell: Cell) -> Cells:
       i, j = cell
       right_wrap = (j + 1)%self.cell_width
       bot_wrap = (i + 1)%self.cell_height
@@ -58,7 +64,7 @@ class GameOfLife:
           (i, j-1), (i, right_wrap),
           (bot_wrap, j-1), (bot_wrap, j), (bot_wrap, right_wrap)]
 
-    def get_next_generation(self):
+    def get_next_generation(self) -> Grid:
         cells_to_update = []
         for i in range(self.cell_height):
             for j in range(self.cell_width):
@@ -72,7 +78,7 @@ class GameOfLife:
             self.grid[c[0]][c[1]] = c[2]
         return self.grid        
 
-    def run(self):
+    def run(self) -> None:
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption('Game of Life')
