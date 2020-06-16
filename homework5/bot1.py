@@ -4,7 +4,7 @@ import datetime
 import re #регулярные выражения
 from bs4 import BeautifulSoup
 
-access_token = ''
+access_token = '1184780361:AAHFnxVUIX3hkZ2o52dGfCJozenvYM2tdyQ'
 domain = 'http://www.ifmo.ru/ru/schedule/'
 
 bot = telebot.TeleBot(access_token)
@@ -17,8 +17,10 @@ def get_page(group, week=''):
         week = str(week) + '/'
     if week == '0/':
         week = ''
-    url = '{domain}/{group}/{week}raspisanie_zanyatiy_{group}.htm'.format(
-        domain=config.domain,
+    week = '0'
+    
+    url = '{domain}/{week}/{group}/raspisanie_zanyatiy_{group}.htm'.format(
+        domain=domain,
         week=week,
         group=group)
     resp = requests.get(url)
@@ -54,7 +56,7 @@ def get_schedule(web_page: str, day: str):
 
 
 def get_study_day(web_page: str, day: str, week: str, group: str):
-    if days.index(day) >= 6: #метод ищет элемент в списке и возвращает его индекс. 
+    if days.index(day) >= 6:
         day = 'monday'
         if week == 2:
             week = 1
@@ -64,7 +66,7 @@ def get_study_day(web_page: str, day: str, week: str, group: str):
     schedule = get_schedule(web_page, day)
     cur_day = days.index(day) + 1
     i = 0
-    while schedule is "error" and i != 14:
+    while schedule == "error" and i != 14:
         if cur_day == 6:
             cur_day = 0
             if week == 2:
