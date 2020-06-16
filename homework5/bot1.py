@@ -1,14 +1,11 @@
 import requests
-import config
 import telebot
 import datetime
 import re #регулярные выражения
 from bs4 import BeautifulSoup
 
-
-telebot.apihelper.proxy = {'https': '129.146.181.251:3128'} #прокси сервер
-
-bot = telebot.TeleBot(config.access_token)
+access_token = ''
+bot = telebot.TeleBot(access_token)
 
 days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
