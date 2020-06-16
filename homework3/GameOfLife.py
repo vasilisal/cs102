@@ -1,3 +1,13 @@
+import pathlib
+import random
+
+from typing import List, Optional, Tuple
+
+
+Cell = Tuple[int, int]
+Cells = List[int]
+Grid = List[Cells]
+
 class GameOfLife:
 
     def __init__(self, size, randomize=True, max_generations=None):
