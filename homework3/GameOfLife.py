@@ -22,7 +22,7 @@ class GameOfLife:
         # Текущее число поколений
         self.generations = 1
 
-    def create_grid(self, randomize=False):
+    def create_grid(self, randomize: bool=False) -> Grid:
       grid = [[0]*self.cols for i in range(self.rows)]
       if randomize:
         for i in range(self.rows):
@@ -30,7 +30,7 @@ class GameOfLife:
             grid[i][j] = random.randint(0,1)
       return grid
 
-    def get_neighbours(self, cell):
+    def get_neighbours(self, cell: Cell) -> Cells:
         i, j = cell
         right_wrap = (j + 1)%self.cols
         bot_wrap = (i + 1)%self.rows
@@ -38,7 +38,7 @@ class GameOfLife:
           (i, j-1), (i, right_wrap),
           (bot_wrap, j-1), (bot_wrap, j), (bot_wrap, right_wrap)]
 
-    def get_next_generation(self):
+    def get_next_generation(self) -> Grid:
         grid = self.curr_generation
         cells_to_update = []
         for i in range(self.rows):
@@ -53,7 +53,7 @@ class GameOfLife:
             grid[c[0]][c[1]] = c[2]
         return grid
 
-    def step(self):
+    def step(self) -> None:
         for i in self.rows:
           for j in range.cols:
             self.prev_generation[i][j] = self.curr_generation[i][j]
